@@ -24,6 +24,7 @@ disp('Loading data...')
 input_files = {};
 features =[];
 for f = dir(input_directory)'
+    %disp(f.name)
     if exist(fullfile(input_directory, f.name), 'file') == 2 && f.name(1) ~= '.' && all(f.name(end - 2 : end) == 'mat')
         input_files{end + 1} = f.name;
     end
@@ -210,9 +211,12 @@ end
 
 function [data,tlines] = load_challenge_data(filename)
 
+fileext = append(filename, '.hea');
 % Opening header file
-fid=fopen([filename '.hea']);
+%fid=fopen([filename '.hea']);
+disp(fileext);
 
+fid=fopen(fileext);
 if (fid<=0)
     disp(['error in opening file ' filename]);
 end
@@ -225,7 +229,9 @@ while ischar(tline)
 end
 fclose(fid);
 
-f=load([filename '.mat']);
+mfileext = append(filename, '.mat');
+%f=load([filename '.mat']);
+f=load(mfileext);
 
 try
     data = f.val;

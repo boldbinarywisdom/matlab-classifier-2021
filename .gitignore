@@ -1,0 +1,11 @@
+*.mat
+*.hea
+*.csv
+*.swp
+WFDB_Ga/*.hea
+WFDB_Ga/*.mat
+*.gz
+output/*.csv
+WFDB_CPSC2018_2/*.*
+model/*.*
+*.m~

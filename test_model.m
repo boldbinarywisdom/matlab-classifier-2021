@@ -102,7 +102,13 @@ end
 function [data,tlines] = load_challenge_data(filename)
 
 % Opening header file
-fid=fopen([filename '.hea']);
+fileext = append(filename, '.hea');
+% Opening header file
+%fid=fopen([filename '.hea']);
+disp(fileext);
+
+%fid=fopen([filename '.hea']);
+fid=fopen(fileext);
 if (fid<=0)
     disp(['error in opening file ' filename]);
 end
@@ -115,7 +121,14 @@ while ischar(tline)
 end
 fclose(fid);
 
-f=load([filename '.mat']);
+% Opening header file
+fileext = append(filename, '.mat');
+% Opening header file
+%fid=fopen([filename '.hea']);
+disp(fileext);
+
+%f=load([filename '.mat']);
+f=load(fileext);
 try
     data = f.val;
 catch ex
@@ -127,10 +140,12 @@ end
 %% save predictions
 function save_challenge_predictions(output_directory,recording, scores, labels,classes)
 
-output_file = ([output_directory filesep recording '.csv']);
+%output_file = ([output_directory filesep recording '.csv']);
+output_file = append(output_directory, filesep, recording, '.csv');
 
 Total_classes = strjoin(classes,','); %insert commaas
 %write header to file
+disp(output_file);
 fid = fopen(output_file,'w');
 fprintf(fid,'#%s\n',recording);
 fprintf(fid,'%s\n',Total_classes);
