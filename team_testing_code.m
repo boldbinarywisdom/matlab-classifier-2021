@@ -20,6 +20,6 @@ features = get_features(data,header_data,leads_idx);
 % Use your classifier here to obtain a label and score for each class.
 score = mnrval(model,features);
 [~,idx] = nanmax (score);
-
+disp(score);
 label(idx)=1;
 end

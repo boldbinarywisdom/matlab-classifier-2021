@@ -1,4 +1,4 @@
-function [recording,Total_time,num_leads,Fs,adc_gain,age_data,sex_data,Baseline]=extract_data_from_header(header_data);
+function [recording,Total_time,num_leads,Fs,adc_gain,age_data,sex_data,Baseline]=extract_data_from_header(header_data)
 
 % Extract header information:
  
