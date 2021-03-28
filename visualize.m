@@ -1,12 +1,28 @@
 % %visualize.m
 % %visualize a signal from the .mat file
 % %visualize single channel reference https://www.youtube.com/watch?v=GzavKiHXilo
-% clc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Purpose:
+% Visual signals extracted from the signal directories
+%
+% Inputs:
+%
+% Outputs:
+% 
+% Author: Zade, Ashutosh (C) 2021 ashutosh.zade@hec.edu
+% Version 2.0
+% Date March 26, 2001
+% Version 2.0 March 28, 2021
+%
+% Copyright: BSD 2-Clause License
+%
+% Notes
 % ECGSignal = val;
 % %Fs = 360;
 % t = (0:length(ECGSignal)-1)/Fs;
 % plot(t, ECGSignal);
 % plot(EKG(3,1:900))
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function visualize()
 
 Leadc = {'I','II','III','aV_R','aV_L','aV_F','V_1','V_2','V_3','V_4','V_5','V_6'};
@@ -16,7 +32,7 @@ tmp_input_file='WFDB_Ga/E08276';
 
 [recording,Total_time,num_leads,Fs,adc_gain,age_data,sex_data,Baseline] = extract_data_from_header(hea_data);
  
-disp(Fs);
+disp(['Frequency' Fs]);
 disp(Total_time);
 disp(recording);
 disp(adc_gain);
