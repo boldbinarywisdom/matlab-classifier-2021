@@ -41,7 +41,7 @@ disp(sex_data);
 disp(num_leads);
 disp(Baseline);
 
-window = 999;
+window = 1000;
 EKG = data;
 
 visualize_time_domain(Fs, window, EKG, Leadc);
@@ -111,14 +111,35 @@ function visualize_freq_domain(Fs, window, EKG)
 fb = cwtfilterbank('SignalLength',window,...
     'SamplingFrequency',Fs,...
     'VoicesPerOctave',12);
-    
-sig = EKG(1,1:window);
-[cfs,frq] = wt(fb,sig);
+
 t = (0:window-1)/Fs;
-figure;
-pcolor(t,frq,abs(cfs))
-set(gca,'yscale','log');shading interp;axis tight;
-title('Scalogram');xlabel('Time (s)');ylabel('Frequency (Hz)')
+figure
+kc = 1;
+for k1 = 1:4
+    for k2 = 1:4:9
+        sbpt = (k1-1)+k2;
+        subplot(3,4,sbpt)
+        sig = EKG(kc,1:window);
+        [cfs,frq] = wt(fb,sig);
+
+        pcolor(t,frq,abs(cfs))
+        set(gca,'yscale','log');shading interp;axis tight;
+        title('Scalogram');xlabel('Time (s)');ylabel('Frequency (Hz)')
+
+        grid
+        ylim([-1000 1000])
+        kc = kc+1;
+    end
+end
 
 end
+
+% sig = EKG(k,1:window);
+% [cfs,frq] = wt(fb,sig);
+% t = (0:window-1)/Fs;
+% figure;
+% pcolor(t,frq,abs(cfs))
+% set(gca,'yscale','log');shading interp;axis tight;
+% title('Scalogram');xlabel('Time (s)');ylabel('Frequency (Hz)')
+
 

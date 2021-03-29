@@ -79,6 +79,7 @@ for i = 1:num_files
                 idx=find(strcmp(classes,tmp_c{k}));
                 label(i,idx)=1;
             end
+            Disp(idx);
             break
         end
     end
