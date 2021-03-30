@@ -16,6 +16,9 @@ function  model = team_training_code(input_directory,output_directory) % train_E
 % By: Nadi Sadr, PhD, <nadi.sadr@dbmi.emory.edu>
 % Version 2.0 1-Dec-2020
 % Version 2.2 25-Jan-2021
+% 
+% Modified by Ashutosh Zade, ashutosh.zade@hec.edu
+% 3/29/21 - minor performance improvements during training
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('Loading data...')
@@ -57,18 +60,23 @@ label=zeros(num_files,num_classes);
 
 for i = 1:num_files
 
+    %% extract data and header from each filename
     disp(['    ', num2str(i), '/', num2str(num_files), '...']);
-
     data = Total_data{i};
     header_data = Total_header{i};
+    
     %% Check the number of available ECG leads
     tmp_hea = strsplit(header_data{1},' ');
-    num_leads = str2num(tmp_hea{2});
-    [leads, leads_idx] = get_leads(header_data,num_leads);
+    %num_leads = str2num(tmp_hea{2});
+    num_leads = str2double(tmp_hea{2});
+    
+    %[leads, leads_idx] = get_leads(header_data,num_leads);
+    [~, leads_idx] = get_leads(header_data,num_leads);
 
     %% Extract features
     tmp_features = get_features(data,header_data,leads_idx);
     features(i,:) = tmp_features(:);
+    
     %% Extract labels
     for j = 1 : length(header_data)
         if startsWith(header_data{j},'#Dx')
@@ -76,15 +84,13 @@ for i = 1:num_files
             % Extract more than one label if avialable
             tmp_c = strsplit(tmp{2},',');
             for k=1:length(tmp_c)
-                idx=find(strcmp(classes,tmp_c{k}));
+                %idx=find(strcmp(classes,tmp_c{k}));
+                idx=strcmp(classes,tmp_c{k});
                 label(i,idx)=1;
             end
-            Disp(idx);
             break
         end
     end
-
-
 end
 
 %% train 4 logistic regression models for 4 different sets of leads
@@ -92,7 +98,8 @@ end
 % Train 12-lead ECG model
 disp('Training 12-lead ECG model...')
 num_leads = 12;
-[leads, leads_idx] = get_leads(header_data,num_leads);
+%[leads, leads_idx] = get_leads(header_data,num_leads);
+[~, leads_idx] = get_leads(header_data,num_leads);
 % Features = [1:12] features from 12 ECG leads + Age + Sex
 Features_leads_idx = [leads_idx{:},13,14];
 Features_leads = features(:,Features_leads_idx);
@@ -102,7 +109,8 @@ save_ECG12leads_model(model,output_directory,classes);
 % Train 6-lead ECG model
 disp('Training 6-lead ECG model...')
 num_leads = 6;
-[leads, leads_idx] = get_leads(header_data,num_leads);
+%[leads, leads_idx] = get_leads(header_data,num_leads);
+[~, leads_idx] = get_leads(header_data,num_leads);
 % Features = [1:6] features from 6 ECG leads + Age + Sex
 Features_leads_idx = [leads_idx{:},13,14];
 Features_leads = features(:,Features_leads_idx);
@@ -112,7 +120,9 @@ save_ECG6leads_model(model,output_directory,classes);
 % Train 3-lead ECG model
 disp('Training 3-lead ECG model...')
 num_leads = 3;
-[leads, leads_idx] = get_leads(header_data,num_leads);
+%[leads, leads_idx] = get_leads(header_data,num_leads);
+[~, leads_idx] = get_leads(header_data,num_leads);
+
 % Features = [1:3] features from 3 ECG leads + Age + Sex
 Features_leads_idx = [leads_idx{:},13,14];
 Features_leads = features(:,Features_leads_idx);
@@ -122,7 +132,9 @@ save_ECG3leads_model(model,output_directory,classes);
 % Train 2-lead ECG model
 disp('Training 2-lead ECG model...')
 num_leads = 2;
-[leads, leads_idx] = get_leads(header_data,num_leads);
+%[leads, leads_idx] = get_leads(header_data,num_leads);
+[~, leads_idx] = get_leads(header_data,num_leads);
+
 % Features = [1:2] features from 2 ECG leads + Age + Sex
 Features_leads_idx = [leads_idx{:},13,14];
 Features_leads = features(:,Features_leads_idx);
@@ -208,8 +220,12 @@ for i = 1:num_files
 
 end
 classes=sort(classes);
+%disp('Classes ..')
+%disp(classes)
 end
 
+
+%This function extracts lead information in the form of signal from challenge datasets
 function [data,tlines] = load_challenge_data(filename)
 
 fileext = append(filename, '.hea');
